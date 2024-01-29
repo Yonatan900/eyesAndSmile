@@ -38,7 +38,7 @@ for img in images:
         roi_color = img[y:y + h, x:x + w]
 
         # Detect eyes within face ROI
-        eyes = eye_cascade.detectMultiScale(roi_gray, 1.5, 1)
+        eyes = eye_cascade.detectMultiScale(roi_gray, 1.01, 2)
         for (ex, ey, ew, eh) in eyes:
             cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
 
@@ -63,7 +63,7 @@ labels_eyes = [1 if label == 2 else label for label in labels]
 # Replace non-relevant labels with 0 for categories 0 and 2
 labels_smile = [1 if label == 2 else 0 if label == 1 else label for label in labels]
 
-# generate the confusion matrixes
+# generate the confusion matrix's
 cm_eyes = confusion_matrix(labels_eyes, predicted_labels_eyes)
 cm_smile = confusion_matrix(labels_smile, predicted_labels_smiles)
 
@@ -76,17 +76,17 @@ accuracy_smile = accuracy_score(labels_smile, predicted_labels_smiles)
 # Create a heatmap for cm_eyes
 plt.figure(figsize=(10, 7))
 sns.heatmap(cm_eyes, annot=True, fmt='d')
-plt.xlabel('Predicted')
+plt.xlabel('Predicted\n'
+           f'Accuracy for Eyes Detection: {accuracy_eyes * 100:.2f}%')
 plt.ylabel('Truth')
 plt.title('Confusion Matrix for Eyes')
-plt.text(0, -0.7, f'Accuracy for Eyes Detection: {accuracy_eyes * 100:.2f}%', fontsize=12)
 plt.show()
 
 # Create a heatmap for cm_smile
 plt.figure(figsize=(10, 7))
 sns.heatmap(cm_smile, annot=True, fmt='d')
-plt.xlabel('Predicted')
+plt.xlabel('Predicted\n'
+           f'Accuracy for Smiles Detection: {accuracy_smile * 100:.2f}%')
 plt.ylabel('Truth')
 plt.title('Confusion Matrix for Smiles')
-plt.text(0, -0.7, f'Accuracy for Smiles Detection: {accuracy_smile * 100:.2f}%', fontsize=12)
 plt.show()
